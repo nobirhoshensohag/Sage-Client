@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Feather, Mail, Lock, EyeOff, ArrowRight, Eye } from "lucide-react";
 import { Link } from "react-router";
 import Logo from "../../components/Shared/Logo";
+import SocialLogin from "../../components/Shared/SocialLogin";
 
 
 const Login = () => {
@@ -99,7 +100,7 @@ const Login = () => {
             Sign In
           </button>
         </form>
-        
+        <SocialLogin />
         {/* Footer Text */}
         <div className="text-center text-sm text-gray-500 mt-6">
           New to Sage?{" "}

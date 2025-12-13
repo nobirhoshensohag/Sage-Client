@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import Logo from "../../components/Shared/Logo";
+import SocialLogin from "../../components/Shared/SocialLogin";
 
 
 const Register = () => {
@@ -136,7 +137,7 @@ const Register = () => {
           </button>
         </form>
         {/* Google Login */}
-        
+        <SocialLogin />
         {/* Footer Text */}
         <div className="text-center text-sm text-gray-500 mt-6">
           Already in Sage?{" "}
