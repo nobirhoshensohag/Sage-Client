@@ -10,6 +10,8 @@ import AddLessons from "../pages/ProtectedPages/AddLessons";
 import PrivateRoute from "../routes/PrivateRoute/PrivateRoute";
 import LessonDetails from "../pages/LessonDetails";
 import PaymentCancelled from "../pages/Payment/PaymentCancelled";
+import UpgradePremium from "../pages/Payment/UpgradePremium";
+import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 
 export const router = createBrowserRouter([
   {
@@ -39,9 +41,17 @@ export const router = createBrowserRouter([
       },
       {
         path: "/payment-cancelled",
+          element: <PaymentCancelled />,
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/payment",
         element: (
           <PrivateRoute>
-            <PaymentCancelled />
+             <UpgradePremium />
           </PrivateRoute>
         ),
       },

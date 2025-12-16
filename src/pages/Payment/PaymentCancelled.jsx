@@ -1,15 +1,31 @@
 import React from "react";
 import { X, ArrowLeft, RefreshCw, ShieldAlert } from "lucide-react";
 import { Link } from "react-router";
+import useAxios from "../../hooks/useAxios";
+import useAuth from "../../hooks/useAuth";
 
 const PaymentCancelled = () => {
   const THEME = {
-    dark: "#1A2F23", // Dark Forest
-    primary: "#4F6F52", // Sage
-    light: "#F3F5F0", // Mist
-    accent: "#D4C5A8", // Gold
+     dark: "#1A2F23",
+    primary: "#4F6F52",
+    light: "#F3F5F0",
+    accent: "#D4C5A8",
     white: "#FFFFFF",
-    error: "#9F5F5F", // Muted Earthy Red for errors
+     error: "#9F5F5F",
+  };
+  const axiosInstance = useAxios();
+  const { user } = useAuth();
+
+   const handlePayment = () => {
+    const paymentInfo = {
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+    };
+    axiosInstance.post("/payment-checkout-session", paymentInfo).then((res) => {
+      console.log(res.data);
+      window.location.href = res.data.url;
+    });
   };
 
   return (
@@ -86,6 +102,7 @@ const PaymentCancelled = () => {
         {/* Actions */}
         <div className="space-y-4">
           <button
+           onClick={handlePayment}
             className="w-full cursor-pointer py-4 rounded-xl font-medium text-white shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl flex items-center justify-center gap-2"
             style={{ backgroundColor: THEME.dark }}
           >
