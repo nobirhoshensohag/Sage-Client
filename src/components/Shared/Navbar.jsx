@@ -83,7 +83,13 @@ const UserDropdown = ({ user, handleLogout }) => {
               <UserIcon size={16} className="mr-3" />
               Profile
             </Link>
-           
+            <Link
+              to="/settings"
+              className="flex items-center px-4 py-2 text-sm text-[#2C3E2E]/80 hover:bg-[#F3F5F0] hover:text-[#4F6F52] transition-colors"
+            >
+              <Settings size={16} className="mr-3" />
+              Settings
+            </Link>
           </div>
 
           {/* Footer with Logout */}
