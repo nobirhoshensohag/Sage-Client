@@ -9,6 +9,7 @@ import {
   Globe,
 } from "lucide-react";
 import Logo from "./Logo";
+import useTheme from "../../hooks/useTheme";
 
 const FooterLink = ({ href, children }) => (
   <a
@@ -31,19 +32,14 @@ const SocialIcon = ({ Icon, href }) => (
 );
 
 const Footer = () => {
-  const COLORS = {
-    darkGreen: "#1A2F23",
-    sage: "#4F6F52",
-    mist: "#F3F5F0",
-    gold: "#D4C5A8",
-  };
+   const { COLORS } = useTheme();
 
   return (
     <footer
       className="w-full text-white font-sans pt-16 pb-8 border-t border-gray-800"
       style={{ backgroundColor: COLORS.darkGreen }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* --- Main Content Grid --- */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-12 border-b border-gray-800 pb-12">
           {/* 1. Brand Identity */}

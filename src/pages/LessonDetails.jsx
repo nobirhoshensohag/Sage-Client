@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import ShareButton from "../components/Shared/ShareButton";
 import Swal from "sweetalert2";
 import usePremium from "../hooks/usePremium";
+import LessonCard from "../components/Shared/LessonCard";
 
 const LessonDetails = () => {
   const { id } = useParams();
@@ -46,10 +47,17 @@ const LessonDetails = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteId, setFavoriteId] = useState("")
   const [newComment, setNewComment] = useState("");
+  const [sort, setSort] = useState("");
+  const [tone, setTone] = useState("");
+  const [similarLessons, setSimilarLessons] = useState();
+  const [similarLessonsByCategory, setSimilarLessonsByTone] = useState();
   const [comments, setComments] = useState([]);
    const reportModalRef = useRef(null);
 
+   console.log(sort);
+
   const handleModalOpen = () => {
+    if (!user) return toast.error("You must be logged in");
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -68,6 +76,7 @@ const LessonDetails = () => {
     reportModalRef.current.close();
   };
   const handleReport = (e) => {
+      if (!user) return toast.error("You must be logged in");
     e.preventDefault();
     const reportInfo = {
       postId: id,
@@ -165,6 +174,8 @@ const LessonDetails = () => {
       .get(`/lessons/${id}`)
       .then((res) => {
         setLesson(res.data);
+         setSort(res.data.category);
+        setTone(res.data.tone);
         setComments(res.data.comments || []);
         setLoading(false);
          setLikes(res.data.likes);
@@ -183,6 +194,25 @@ const LessonDetails = () => {
       })
       .catch(() => setLoading(false));
    }, [id, lesson, axiosInstance, user]);
+
+     useEffect(() => {
+    axiosInstance
+      .get(`/lessons?category=${encodeURIComponent(sort)}`)
+      .then((res) => {
+        setSimilarLessons(res.data.result);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [sort, axiosInstance]);
+  useEffect(() => {
+    axiosInstance
+      .get(`/lessons?tone=${tone}`)
+      .then((res) => {
+        setSimilarLessonsByTone(res.data.result);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [tone, axiosInstance]);
 
   useEffect(() => {
     
@@ -510,6 +540,43 @@ const LessonDetails = () => {
                       Upgrade Membership
                     </button>
                   </Link>
+                </div>
+              </div>
+            )}
+          </div>
+            <div>
+            {/* SIMILAR LESSONS BY CATEGORY */}
+            {similarLessons && similarLessons.length > 0 && (
+              <div className="mt-16">
+                <h2 className="text-3xl font-bold text-[#1A2F23] mb-6">
+                  More From This Category
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
+                  {similarLessons
+                    .filter((l) => l._id !== lesson._id)
+                    .slice(0, 6)
+                    .map((item) => (
+                      <LessonCard lesson={item} />
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* SIMILAR LESSONS BY TONE */}
+            {similarLessons && similarLessons.length > 0 && (
+              <div className="mt-20">
+                <h2 className="text-3xl font-bold text-[#1A2F23] mb-6">
+                  More With This Tone
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
+                  {similarLessons
+                    .filter((l) => l._id !== lesson._id)
+                    .slice(0, 6)
+                    .map((lesson) => (
+                      <LessonCard lesson={lesson} />
+                    ))}
                 </div>
               </div>
             )}

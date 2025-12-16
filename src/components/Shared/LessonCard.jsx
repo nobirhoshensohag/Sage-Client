@@ -2,23 +2,19 @@ import React from "react";
 import { Clock, ExternalLink, Lock, Sparkles, User, Crown } from "lucide-react";
 import { Link } from "react-router";
 import useAxios from "../../hooks/useAxios";
+import useTheme from "../../hooks/useTheme";
+import usePremium from "../../hooks/usePremium";
 
-const COLORS = {
-  darkGreen: "#1A2F23",
-  sage: "#4F6F52",
-  mist: "#F3F5F0",
-  gold: "#D4C5A8",
-  white: "#FFFFFF",
-};
-
-const LessonCard = ({ lesson, user }) => {
+const LessonCard = ({ lesson }) => {
+  const { COLORS } = useTheme();
+  const isPremium = usePremium();
   const isLessonPremium =
     lesson?.isPremium === true ||
     lesson?.isPremium === "true" ||
     lesson?.isPremiumAccess === true ||
     lesson?.isPremiumAccess === "true";
 
-  const isUserPremium = user?.isPremium === true;
+  const isUserPremium = isPremium === true;
 
   const isLocked = isLessonPremium && !isUserPremium;
 
