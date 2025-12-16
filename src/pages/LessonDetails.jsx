@@ -20,11 +20,13 @@ import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import ShareButton from "../components/Shared/ShareButton";
 import Swal from "sweetalert2";
+import usePremium from "../hooks/usePremium";
 
 const LessonDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const axiosInstance = useAxios();
+  const isPremium = usePremium();
 
   const THEME = {
     dark: "#1A2F23",
@@ -219,9 +221,9 @@ const LessonDetails = () => {
 
   const isLessonPremium =
     lesson?.isPremiumAccess === true || lesson?.isPremiumAccess === "true";
-  const isUserPremium = user?.isPremium === true;
+  
   const isAuthor = user?.email === lesson?.email;
-  const isLocked = isLessonPremium && !isUserPremium && !isAuthor;
+  const isLocked = isLessonPremium && !isPremium && !isAuthor;
 
   const isPrivate = lesson?.isPrivate === true || lesson?.isPrivate === "true";
   const lastUpdated = lesson?.updatedAt
@@ -504,7 +506,7 @@ const LessonDetails = () => {
                     Unlock this premium wisdom by upgrading your membership.
                   </p>
                     <Link to="/payment">
-                    <button className="w-full py-3 bg-[#D4C5A8] hover:bg-[#c3b290] text-[#1A2F23] font-bold rounded-xl transition-colors shadow-md cursor-pointer">
+                     <button className="w-full cursor-pointer py-3 bg-[#D4C5A8] hover:bg-[#c3b290] text-[#1A2F23] font-bold rounded-xl transition-colors shadow-md">
                       Upgrade Membership
                     </button>
                   </Link>
