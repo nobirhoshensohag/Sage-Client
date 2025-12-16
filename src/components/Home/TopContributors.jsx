@@ -2,19 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Crown, Star, Feather, Trophy, Medal, Gem } from "lucide-react";
 import useAxios from "../../hooks/useAxios";
 import useAuth from "../../hooks/useAuth";
+import useTheme from "../../hooks/useTheme";
 
 const TopContributors = () => {
   const [contributors, setContributors] = useState([]);
   const [loading, setLoading] = useState(true);
   const axiosInstance = useAxios();
   const { user } = useAuth();
-  const THEME = {
-    dark: "#1A2F23", // Dark Forest
-    primary: "#4F6F52", // Sage
-    light: "#F3F5F0", // Mist
-    accent: "#D4C5A8", // Gold
-    white: "#FFFFFF",
-  };
+  const COLORS = useTheme();
+
 
   useEffect(() => {
     const fetchContributors = async () => {

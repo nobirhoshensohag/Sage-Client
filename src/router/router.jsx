@@ -12,6 +12,10 @@ import LessonDetails from "../pages/LessonDetails";
 import PaymentCancelled from "../pages/Payment/PaymentCancelled";
 import UpgradePremium from "../pages/Payment/UpgradePremium";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
+import DashboardLayout from "../layouts/DashboardLayout";
+import MyLessons from "../pages/ProtectedPages/Dashboard/MyLessons";
+import DashboardHome from "../pages/ProtectedPages/Dashboard/DashboardHome";
+import MyFavorites from "../pages/ProtectedPages/Dashboard/MyFavorites";
 
 export const router = createBrowserRouter([
   {
@@ -27,14 +31,7 @@ export const router = createBrowserRouter([
         element: <PublicLessons />,
       },
        { path: "contact", element: <Contact /> },
-        {
-        path: "add-lessons",
-        element: (
-          <PrivateRoute>
-            <AddLessons />
-          </PrivateRoute>
-        ),
-      },
+        
       {
         path: "/lesson-details/:id",
         element: <LessonDetails />,
@@ -68,6 +65,32 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+    ],
+  },
+   {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <DashboardHome />,
+      },
+      {
+        path: "add-lessons",
+        element: <AddLessons />,
+      },
+      {
+        path: "my-lessons",
+        element: <MyLessons />,
+      },
+      {
+        path: "my-favorites",
+        element: <MyFavorites />,
       },
     ],
   },
