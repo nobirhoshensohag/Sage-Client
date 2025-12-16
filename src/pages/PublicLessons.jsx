@@ -1,48 +1,75 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search, Filter, BookOpen } from "lucide-react";
+import { MdOutlineCancel } from "react-icons/md";
 import Loader from "../components/Shared/Loader";
 import LessonCard from "../components/Shared/LessonCard";
 import useAxios from "../hooks/useAxios";
 import useAuth from "../hooks/useAuth";
+import useTheme from "../hooks/useTheme";
+import usePremium from "../hooks/usePremium";
 
 const PublicLessons = () => {
-  const THEME = {
-    dark: "#1A2F23",
-    primary: "#4F6F52",
-    light: "#F3F5F0",
-    accent: "#D4C5A8",
-    white: "#FFFFFF",
-  };
+  const { COLORS } = useTheme();
 
   const [lessons, setLessons] = useState([]);
   const [totalLessons, setTotalLessons] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+  const [sort, setSort] = useState("");
+  const [filter, setFilter] = useState("");
+  const [search, setSearch] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const [category, setCategory] = useState("");
   const { user } = useAuth();
   const axiosInstance = useAxios();
+  const [loading, setLoading] = useState(true);
+  const isPremium = usePremium();
   const limit = 6;
 
-  // Fetch lessons
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearch(searchText);
+  };
+  const handleSort = (e) => {
+    setSort(e.target.value);
+  };
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+  };
+  const handleFilter = (e) => {
+    setFilter(e.target.value);
+  };
+  const handleClear = () => {
+    setSearch("");
+    setSearchText("");
+    setSort("");
+    setCategory("");
+    setFilter("");
+  };
   useEffect(() => {
     setLoading(true);
+    console.log(encodeURIComponent(category));
     axiosInstance
       .get(
-        `/lessons?isPrivate=false&limit=${limit}&skip=${currentPage * limit}`
+        `/lessons?isPrivate=false&limit=${limit}&skip=${
+          currentPage * limit
+        }&sort=${sort}&filter=${filter}&tone=${filter}&category=${encodeURIComponent(
+          category
+        )}&search=${search}&status=approved`
       )
       .then((res) => {
         setLessons(res.data.result);
         setTotalLessons(res.data.total);
-        setTotalPages(Math.ceil(res.data.total / limit));
         setLoading(false);
+        const page = Math.ceil(res.data.total / limit);
+        setTotalPages(page);
+        console.log(page);
       })
       .catch(() => setLoading(false));
-  }, [axiosInstance, currentPage]);
+  }, [axiosInstance, currentPage, sort, filter, category, search]);
 
-  // Fetch current user
   useEffect(() => {
     if (!user?.email) return;
     axiosInstance.get(`/users?email=${user.email}`).then((res) => {
@@ -52,71 +79,131 @@ const PublicLessons = () => {
 
   return (
     <div
-      className="min-h-screen w-full relative py-20"
-      style={{ backgroundColor: THEME.light }}
+      className="min-h-screen w-full relative py-12"
+      style={{ backgroundColor: COLORS.light }}
     >
       {/* Background */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
           backgroundImage: `
-            radial-gradient(circle at 15% 10%, ${THEME.accent}20 0%, transparent 25%),
-            radial-gradient(circle at 85% 90%, ${THEME.primary}15 0%, transparent 30%)
+            radial-gradient(circle at 15% 10%, ${COLORS.accent}20 0%, transparent 25%),
+            radial-gradient(circle at 85% 90%, ${COLORS.primary}15 0%, transparent 30%)
           `,
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
-        {/* Hero */}
-        <div className="text-center mb-16 space-y-4">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-0 py-16">
+        {/* HERO SECTION */}
+        <motion.div
+          className="text-center mb-16 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
           <div className="inline-flex items-center justify-center p-3 rounded-full bg-white shadow-md mb-4">
-            <BookOpen size={24} style={{ color: THEME.primary }} />
+            <BookOpen size={24} style={{ color: COLORS.primary }} />
           </div>
           <h1
-            className="text-4xl md:text-6xl font-serif font-bold"
-            style={{ color: THEME.dark }}
+            className="text-4xl md:text-6xl font-serif font-bold tracking-tight"
+            style={{ color: COLORS.dark }}
           >
             The Collective Wisdom
           </h1>
-          <p className="max-w-2xl mx-auto text-lg text-gray-500">
-            A curated library of life lessons shared by the community.
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-500 font-light">
+            A curated library of life lessons, hard-earned truths, and moments
+            of clarity shared by the community.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Search Bar */}
+        {/* SEARCH & FILTER BAR */}
         <motion.div
-          className="max-w-4xl mx-auto mb-16"
+          className="max-w-[1440px] mx-auto mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
         >
-          <div className="bg-white rounded-2xl shadow-xl p-2 flex flex-col md:flex-row gap-2">
-            <div className="flex-1 flex items-center px-4 py-3">
+          <div className=" flex flex-col xl:flex-row items-center gap-3 border border-gray-100">
+            {/* SEARCH INPUT */}
+            <form
+              onSubmit={(e) => handleSearch(e)}
+              className="bg-white rounded-2xl shadow-xl shadow-[#1A2F23]/5 flex-1 flex items-center px-2 lg:pr-0 lg:pl-4 py-1 lg:py-0 w-full"
+            >
               <Search size={20} className="text-gray-400 mr-3" />
               <input
                 type="text"
+                name="search"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
                 placeholder="Search for wisdom..."
-                className="flex-1 outline-none"
-              />
-            </div>
-            <button className="flex items-center gap-2 px-6 py-3 text-gray-600">
-              <Filter size={18} />
-              Filter
-            </button>
-            <button
-              className="px-8 py-3 rounded-xl text-white font-bold"
-              style={{ backgroundColor: THEME.dark }}
+                className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder:text-gray-400 font-medium"
+              />{" "}
+              {/* SEARCH BUTTON */}
+              <button
+                type="submit"
+                className=" md:w-auto px-8 py-2 rounded-xl font-bold text-white transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
+                style={{ backgroundColor: COLORS.dark }}
+              >
+                Search
+              </button>
+            </form>
+
+            {/* Category Dropdown */}
+            <select
+              value={category}
+              onChange={(e) => handleCategory(e)}
+              className="border cursor-pointer rounded-xl px-4 py-2 text-gray-700 w-full md:w-auto"
             >
-              Search
-            </button>
+              <option value="">Filter: All</option>
+              <option value="Personal Growth">Personal Growth</option>
+              <option value="Career">Career</option>
+              <option value="Relationships">Relationships</option>
+              <option value="Mistakes Learned">Mistakes Learned</option>
+              <option value="Philosophy">Philosophy</option>
+            </select>
+
+            {/* FILTER DROPDOWN */}
+            <select
+              value={filter}
+              onChange={(e) => handleFilter(e)}
+              className="border cursor-pointer rounded-xl px-4 py-2 text-gray-700 w-full md:w-auto"
+            >
+              <option value="">Filter: All Emotional Tones</option>
+              <option value="Motivational">Motivational</option>
+              <option value="Sad">Sad</option>
+              <option value="Realization">Realization</option>
+              <option value="Gratitude">Gratitude</option>
+            </select>
+
+            {/* SORT DROPDOWN */}
+            <select
+              value={sort}
+              onChange={(e) => handleSort(e)}
+              className="border cursor-pointer rounded-xl px-4 py-2 text-gray-700 w-full md:w-auto"
+            >
+              <option value="postedAt">Sort: Newest</option>
+              <option value="favorites">Most Saved</option>
+              <option value="likes">Most Liked</option>
+            </select>
+          </div>
+          <div className="flex justify-center mt-4">
+            {(filter || sort || search || searchText || category) && (
+              <button
+                onClick={handleClear}
+                className=" md:w-auto px-8 py-2 rounded-xl font-bold text-white transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center gap-1"
+                style={{ backgroundColor: COLORS.dark }}
+              >
+                <MdOutlineCancel /> Clear
+              </button>
+            )}
           </div>
         </motion.div>
 
-        {/* Lessons */}
+        {/* LESSON GRID */}
         {loading ? (
-          <div className="flex flex-col items-center py-20">
+          <div className="flex flex-col items-center justify-center py-20">
             <Loader />
-            <p className="mt-4 text-gray-400 italic">
+            <p className="mt-4 text-gray-400 font-serif italic">
               Retrieving archives...
             </p>
           </div>
@@ -129,7 +216,9 @@ const PublicLessons = () => {
               hidden: { opacity: 0 },
               visible: {
                 opacity: 1,
-                transition: { staggerChildren: 0.1 },
+                transition: {
+                  staggerChildren: 0.1,
+                },
               },
             }}
           >
@@ -141,56 +230,49 @@ const PublicLessons = () => {
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <LessonCard
-                  lesson={lesson}
-                  user={currentUser || { isPremium: false }}
-                />
+                <LessonCard lesson={lesson} isPremium={isPremium} />
               </motion.div>
             ))}
           </motion.div>
         ) : (
           <div className="text-center py-20 opacity-60">
-            <h3 className="text-2xl text-gray-400 mb-2">
+            <h3 className="text-2xl font-serif text-gray-400 mb-2">
               The pages are blank.
             </h3>
-            <p className="text-gray-400">
-              Be the first to share your wisdom.
-            </p>
+            <p className="text-gray-400">Be the first to share your wisdom.</p>
           </div>
         )}
-
-        {/* Pagination */}
-        <div className="flex gap-2 justify-center">
-          {currentPage > 0 && (
-            <button
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="btn border"
-            >
-              Prev
-            </button>
-          )}
-
-          {[...Array(totalPages).keys()].map((i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i)}
-              className={`btn ${
-                i === currentPage ? "bg-black text-white" : "border"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          {currentPage < totalPages - 1 && (
-            <button
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="btn border"
-            >
-              Next
-            </button>
-          )}
-        </div>
+      </div>
+      <div className="flex gap-1 flex-wrap justify-center">
+        {currentPage > 0 && (
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            className={"btn text-[#1a2f23] border border-[#1a2f23]"}
+          >
+            Prev
+          </button>
+        )}
+        {[...Array(totalPages).keys()].map((i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i)}
+            className={`${
+              i === currentPage
+                ? "btn bg-[#1a2f23] text-white"
+                : "btn text-[#1a2f23] border border-[#1a2f23]"
+            }`}
+          >
+            {i}
+          </button>
+        ))}
+        {currentPage < totalPages - 1 && (
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            className={"btn text-[#1a2f23] border border-[#1a2f23]"}
+          >
+            Next
+          </button>
+        )}
       </div>
     </div>
   );

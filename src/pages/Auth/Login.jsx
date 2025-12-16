@@ -61,7 +61,7 @@ const Login = () => {
               </div>
               <input
                 type="email"
-                 {...register("email", { required: true })}
+                {...register("email", { required: true })}
                 placeholder="your.wisdom@sage.co"
                 className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8FA895]/50 focus:border-[#8FA895] transition-all text-sm placeholder-gray-400"
               />
@@ -109,7 +109,7 @@ const Login = () => {
                 )}
               </div>
             </div>
-             {errors?.password?.type === "required" && (
+            {errors?.password?.type === "required" && (
               <p className="text-red-500 text-xs">Password is required</p>
             )}
             {errors?.password?.type === "minLength" && (
@@ -150,7 +150,6 @@ const Login = () => {
           </Link>
         </div>
 
-        {/* Bottom Meta (Mimicking the image small text) */}
         <div className="pt-12 border-t border-gray-200 mt-8">
           <div className="flex justify-between items-center text-[10px] text-gray-400 font-mono">
             <span>App ID: sage_x8ds_irn</span>

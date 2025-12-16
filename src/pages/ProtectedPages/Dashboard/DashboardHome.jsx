@@ -298,6 +298,15 @@ const DashboardHome = () => {
                     </div>
                     <div className="text-right hidden sm:block">
                       <span
+                        className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full mr-2 ${
+                          lesson.status === "approved"
+                            ? "bg-green-500 text-green-100"
+                            : "bg-yellow-500 text-yellow-100"
+                        }`}
+                      >
+                        {lesson.status === "approved" ? "Approved" : "Pending"}
+                      </span>
+                      <span
                         className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${
                           lesson.isPremiumAccess === "true"
                             ? "bg-[#D4C5A8]/20 text-[#8C7A5B]"

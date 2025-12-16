@@ -68,15 +68,14 @@ const Hero = () => {
   };
 
   return (
-     <div className="relative w-full overflow-hidden text-slate-800">
-      {/* Decorative Background Blob */}
+    <div className="relative w-full overflow-hidden text-slate-800">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#D4DEC9] rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#E8E6D9] rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 py-12 lg:py-24 relative z-10 min-h-[650px] flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full mt-12 lg:mt-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full mt-12 lg:mt-0">
           {" "}
           {/* --- Left: Carousel Mobile--- */}
           <div
@@ -100,12 +99,11 @@ const Hero = () => {
                     alt={slide.headline}
                     className="w-full h-full object-cover"
                   />
-                  {/* Gradient Overlay for text readability if needed, or just style */}
+
                   <div className="absolute inset-0 bg-gradient-to-t from-[#2C3E2E]/60 to-transparent opacity-40"></div>
                 </div>
               ))}
 
-              {/* Floating Glass Card (Social Proof/Stats) */}
               <div className="absolute bottom-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl shadow-lg max-w-[200px] hidden md:block animate-bounce-slow">
                 <div className="flex items-center gap-3">
                   <div className="avatar-group -space-x-3 rtl:space-x-reverse">
@@ -172,11 +170,11 @@ const Hero = () => {
 
                     {/* CTA Buttons using DaisyUI */}
                     <div className="flex flex-wrap gap-4 pt-2">
-                       <Link
+                      <Link
                         to={
                           slide.cta === "Explore Library"
                             ? "/public-lessons"
-                            : "/add-lesson"
+                            : "/dashboard/add-lessons"
                         }
                         className="btn bg-[#4F6F52] hover:bg-[#3A523C] text-white border-none px-8 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
                       >
@@ -211,9 +209,8 @@ const Hero = () => {
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* --- RIGHT: Visual Carousel (Card Style) --- */}
+          </div>{" "}
+          {/* --- Right: Carousel PC --- */}
           <div
             className="relative h-[400px] lg:h-[550px] w-full hidden lg:block"
             onMouseEnter={() => setIsAutoPlaying(false)}
@@ -235,7 +232,7 @@ const Hero = () => {
                     alt={slide.headline}
                     className="w-full h-full object-cover"
                   />
-                  {/* Gradient Overlay for text readability if needed, or just style */}
+
                   <div className="absolute inset-0 bg-gradient-to-t from-[#2C3E2E]/60 to-transparent opacity-40"></div>
                 </div>
               ))}
@@ -286,7 +283,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* CSS Animation injection for specific text fades */}
       <style jsx>{`
         @keyframes fade-in-up {
           0% {

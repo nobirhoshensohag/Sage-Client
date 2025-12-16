@@ -10,7 +10,7 @@ import ThemeProvider from "./contexts/AuthContext/ThemeContext/ThemeProvider.jsx
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-       <ThemeProvider>
+      <ThemeProvider>
         <RouterProvider router={router} />
       </ThemeProvider>
       <Toaster />

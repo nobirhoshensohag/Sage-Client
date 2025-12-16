@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
@@ -12,10 +13,18 @@ import {
 } from "lucide-react";
 import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyFavorites = () => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
+  const axiosSecure = useAxiosSecure();
+
+  // NEW STATES FOR FILTERS
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedTone, setSelectedTone] = useState("");
+
   const axiosInstance = useAxios();
   const { user } = useAuth();
 
@@ -35,21 +44,47 @@ const MyFavorites = () => {
   }, [user, axiosInstance]);
 
   const handleRemove = async (id) => {
-    const previousFavorites = [...favorites];
-    setFavorites(favorites.filter((fav) => fav._id !== id));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1a2f23",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const previousFavorites = [...favorites];
+        setFavorites(favorites.filter((fav) => fav._id !== id));
 
-    try {
-      await axiosInstance.delete(`/favorites/${id}`);
-    } catch (error) {
-      console.error("Failed to delete", error);
+        try {
+          await axiosSecure.delete(`/favorites/${id}`);
+        } catch (error) {
+          console.error("Failed to delete", error);
+          setFavorites(previousFavorites);
+        }
 
-      setFavorites(previousFavorites);
-    }
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+          confirmButtonColor: "#1a2f23",
+        });
+      }
+    });
   };
 
+  // ⭐ APPLY FILTERS
+  const filteredFavorites = favorites.filter((fav) => {
+    const matchCategory =
+      !selectedCategory || fav.postCategory === selectedCategory;
+    const matchTone = !selectedTone || fav.postTone === selectedTone;
+    return matchCategory && matchTone;
+  });
+
   return (
-    <div className="w-full font-sans min-h-[80vh]">
-      {/* 1. HEADER */}
+    <div className="w-full font-sans min-h-[80vh] p-8">
+      {/* HEADER */}
       <div className="mb-10 animate-fade-in-up">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 bg-[#D4C5A8]/20 rounded-xl text-[#8C7A5B]">
@@ -66,7 +101,38 @@ const MyFavorites = () => {
         </p>
       </div>
 
-      {/* 2. TABLE CONTAINER */}
+      {/* ⭐ FILTERS */}
+      <div className="flex flex-wrap items-center gap-4 mb-6 animate-fade-in-up">
+        {/* Category Filter */}
+        <select
+          className="px-4 py-2 border rounded-xl bg-white shadow-sm"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          <option value="Personal Growth">Personal Growth</option>
+          <option value="Career">Career</option>
+          <option value="Relationships">Relationships</option>
+          <option value="Mindset">Mindset</option>
+          <option value="Mistakes Learned">Mistakes Learned</option>
+          <option value="Philosophy">Philosophy</option>
+        </select>
+
+        {/* Tone Filter */}
+        <select
+          className="px-4 py-2 border rounded-xl bg-white shadow-sm"
+          value={selectedTone}
+          onChange={(e) => setSelectedTone(e.target.value)}
+        >
+          <option value="">All Tones</option>
+          <option value="Motivational">Motivational</option>
+          <option value="Sad">Sad</option>
+          <option value="Gratitude">Gratitude</option>
+          <option value="Realization">Realization</option>
+        </select>
+      </div>
+
+      {/* TABLE */}
       <div
         className="bg-white rounded-[2.5rem] shadow-xl border border-white overflow-hidden animate-fade-in-up"
         style={{ animationDelay: "0.1s" }}
@@ -80,7 +146,7 @@ const MyFavorites = () => {
               ></div>
             ))}
           </div>
-        ) : favorites.length > 0 ? (
+        ) : filteredFavorites.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
@@ -99,13 +165,14 @@ const MyFavorites = () => {
                   </th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-gray-50">
-                {favorites.map((fav) => (
+                {filteredFavorites.map((fav) => (
                   <tr
                     key={fav._id}
                     className="group hover:bg-[#F3F5F0]/50 transition-colors"
                   >
-                    {/* COL 1: CONTEXT */}
+                    {/* CONTEXT */}
                     <td className="p-6 pl-10">
                       <div className="flex items-center gap-4">
                         {/* Thumbnail */}
@@ -122,19 +189,20 @@ const MyFavorites = () => {
                             </div>
                           )}
                         </div>
+
                         {/* Text */}
                         <div>
                           <span className="block text-xs font-bold text-[#D4C5A8] uppercase tracking-wide mb-1">
                             Lesson
                           </span>
-                          <h3 className="font-serif font-bold text-[#1A2F23] text-lg hover:text-[#4F6F52] hover:underline decoration-[#D4C5A8] underline-offset-4 transition-all line-clamp-1">
+                          <h3 className="font-serif font-bold text-[#1A2F23] text-lg line-clamp-1">
                             {fav.postTitle}
                           </h3>
                         </div>
                       </div>
                     </td>
 
-                    {/* COL 2: AUTHOR */}
+                    {/* AUTHOR */}
                     <td className="p-6">
                       <div className="flex items-center gap-3">
                         <img
@@ -153,7 +221,7 @@ const MyFavorites = () => {
                       </div>
                     </td>
 
-                    {/* COL 3: DATE */}
+                    {/* DATE */}
                     <td className="p-6">
                       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white border border-gray-100 shadow-sm text-gray-500 text-sm font-medium">
                         <Calendar size={14} className="text-[#D4C5A8]" />
@@ -165,7 +233,7 @@ const MyFavorites = () => {
                       </div>
                     </td>
 
-                    {/* COL 4: ACTIONS */}
+                    {/* ACTIONS */}
                     <td className="p-6 pr-10 text-right">
                       <div className="flex items-center justify-end gap-3">
                         <Link
@@ -211,6 +279,7 @@ const MyFavorites = () => {
         )}
       </div>
 
+      {/* ANIMATION */}
       <style jsx>{`
         @keyframes fade-in-up {
           0% {

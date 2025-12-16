@@ -5,18 +5,18 @@ import useAxios from "../../hooks/useAxios";
 import useAuth from "../../hooks/useAuth";
 
 const PaymentCancelled = () => {
-  const THEME = {
-     dark: "#1A2F23",
+  const COLORS = {
+    dark: "#1A2F23",
     primary: "#4F6F52",
     light: "#F3F5F0",
     accent: "#D4C5A8",
     white: "#FFFFFF",
-     error: "#9F5F5F",
+    error: "#9F5F5F",
   };
   const axiosInstance = useAxios();
   const { user } = useAuth();
 
-   const handlePayment = () => {
+  const handlePayment = () => {
     const paymentInfo = {
       email: user.email,
       displayName: user.displayName,
@@ -27,11 +27,10 @@ const PaymentCancelled = () => {
       window.location.href = res.data.url;
     });
   };
-
   return (
     <div
       className="min-h-screen w-full relative flex items-center justify-center font-sans p-4"
-      style={{ backgroundColor: THEME.light }}
+      style={{ backgroundColor: COLORS.light }}
     >
       {/* --- BACKGROUND TEXTURE --- */}
       <div
@@ -45,7 +44,7 @@ const PaymentCancelled = () => {
       <div
         className="absolute inset-0 z-0 opacity-30"
         style={{
-          background: `radial-gradient(circle at 50% 50%, ${THEME.accent}40 0%, transparent 60%)`,
+          background: `radial-gradient(circle at 50% 50%, ${COLORS.accent}40 0%, transparent 60%)`,
         }}
       />
 
@@ -54,21 +53,20 @@ const PaymentCancelled = () => {
         {/* Icon Circle */}
         <div
           className="w-24 h-24 mx-auto mb-8 rounded-full flex items-center justify-center relative"
-          style={{ backgroundColor: `${THEME.error}15` }} // 15% opacity red
+          style={{ backgroundColor: `${COLORS.error}15` }} // 15% opacity red
         >
-          {/* Pulsing ring effect */}
           <div
             className="absolute inset-0 rounded-full animate-ping opacity-20"
-            style={{ backgroundColor: THEME.error }}
+            style={{ backgroundColor: COLORS.error }}
           ></div>
 
-          <X size={40} style={{ color: THEME.error }} strokeWidth={3} />
+          <X size={40} style={{ color: COLORS.error }} strokeWidth={3} />
         </div>
 
         {/* Headlines */}
         <h1
           className="text-3xl md:text-4xl font-serif font-bold mb-4"
-          style={{ color: THEME.dark }}
+          style={{ color: COLORS.dark }}
         >
           Payment Cancelled
         </h1>
@@ -83,12 +81,12 @@ const PaymentCancelled = () => {
           <ShieldAlert
             size={24}
             className="flex-shrink-0 mt-1"
-            style={{ color: THEME.primary }}
+            style={{ color: COLORS.primary }}
           />
           <div>
             <h3
               className="font-bold text-sm uppercase tracking-wide mb-1"
-              style={{ color: THEME.dark }}
+              style={{ color: COLORS.dark }}
             >
               Secure Status
             </h3>
@@ -102,9 +100,9 @@ const PaymentCancelled = () => {
         {/* Actions */}
         <div className="space-y-4">
           <button
-           onClick={handlePayment}
+            onClick={handlePayment}
             className="w-full cursor-pointer py-4 rounded-xl font-medium text-white shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl flex items-center justify-center gap-2"
-            style={{ backgroundColor: THEME.dark }}
+            style={{ backgroundColor: COLORS.dark }}
           >
             <RefreshCw size={20} />
             Try Payment Again
@@ -113,7 +111,7 @@ const PaymentCancelled = () => {
           <Link to="/">
             <button
               className="w-full py-4 rounded-xl font-medium transition-colors hover:bg-gray-50 flex items-center justify-center gap-2 cursor-pointer"
-              style={{ color: THEME.primary }}
+              style={{ color: COLORS.primary }}
             >
               <ArrowLeft size={20} />
               Return to Home

@@ -5,11 +5,12 @@ import LessonCard from "../Shared/LessonCard";
 import useAuth from "../../hooks/useAuth";
 import Loader from "../Shared/Loader";
 import useTheme from "../../hooks/useTheme";
+import usePremium from "../../hooks/usePremium";
 
 const Featured = () => {
   const { COLORS } = useTheme();
   const { user } = useAuth();
-
+  const isPremium = usePremium();
   const [lessons, setLessons] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,7 +30,6 @@ const Featured = () => {
   }, [axiosInstance]);
   return (
     <div>
-      {/* --- HEADER: Context and Thesis --- */}
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
         <span
           className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
@@ -52,7 +52,7 @@ const Featured = () => {
           A curated treasury of exceptional wisdom
         </p>
       </div>
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-0">
         {/* LESSON GRID */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
@@ -84,7 +84,7 @@ const Featured = () => {
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <LessonCard lesson={lesson} />
+                <LessonCard lesson={lesson} isPremium={isPremium} />
               </motion.div>
             ))}
           </motion.div>

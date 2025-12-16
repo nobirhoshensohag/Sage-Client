@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useAxios from "./useAxios";
 import useAuth from "./useAuth";
 
@@ -7,13 +7,26 @@ const usePremium = () => {
   const { user } = useAuth();
   const [isPremium, setIsPremium] = useState(false);
 
-  useEffect(() => {
+  const fetchPremiumStatus = useCallback(() => {
     if (!user?.email) return;
 
-    axiosInstance.get(`/users?email=${user.email}`).then((res) => {
-      setIsPremium(res.data[0]?.isPremium || false);
-    });
-  }, [user?.email]);
+    axiosInstance
+      .get(`/users?email=${user.email}`)
+      .then((res) => {
+        setIsPremium(Boolean(res.data?.[0]?.isPremium));
+      })
+      .catch(console.error);
+  }, [user?.email, axiosInstance]);
+
+  useEffect(() => {
+    fetchPremiumStatus();
+  }, [fetchPremiumStatus]);
+
+  useEffect(() => {
+    window.addEventListener("premium-updated", fetchPremiumStatus);
+    return () =>
+      window.removeEventListener("premium-updated", fetchPremiumStatus);
+  }, [fetchPremiumStatus]);
 
   return isPremium;
 };

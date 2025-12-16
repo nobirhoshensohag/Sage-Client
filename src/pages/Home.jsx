@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div>
       <Hero />
-         <Featured />
+      <Featured />
       <LearningFromLifeSection />
       <TopContributors />
       <MostSaved />

@@ -32,7 +32,7 @@ const SocialIcon = ({ Icon, href }) => (
 );
 
 const Footer = () => {
-   const { COLORS } = useTheme();
+  const { COLORS } = useTheme();
 
   return (
     <footer

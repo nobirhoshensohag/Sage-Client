@@ -11,7 +11,6 @@ const TopContributors = () => {
   const { user } = useAuth();
   const COLORS = useTheme();
 
-
   useEffect(() => {
     const fetchContributors = async () => {
       try {
@@ -27,7 +26,7 @@ const TopContributors = () => {
     fetchContributors();
   }, [axiosInstance]);
 
-  // --- STYLING LOGIC ---
+
   const getRankStyles = (index) => {
     // RANK 1: THE CHAMPION
     if (index === 0)
@@ -89,7 +88,7 @@ const TopContributors = () => {
     return (
       <div
         className="w-full py-32 flex justify-center items-center"
-        style={{ backgroundColor: THEME.light }}
+        style={{ backgroundColor: COLORS.light }}
       >
         <div className="flex flex-col items-center gap-4 animate-pulse opacity-50">
           <Feather size={48} className="text-[#4F6F52]" />
@@ -129,12 +128,12 @@ const TopContributors = () => {
                 key={contributor.email}
                 className={`relative rounded-[2rem] overflow-hidden flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3 group ${styles.cardClasses}`}
               >
-                {/* 1. Header Background (Curved) */}
+                {/* 1. Header Background  */}
                 <div
                   className={`absolute top-0 w-full h-32 ${styles.headerBg} rounded-b-[50%] scale-150 transition-transform duration-700 group-hover:scale-[1.6]`}
                 ></div>
 
-                {/* 2. Premium Badge (Jewelry Style) */}
+                {/* 2. Premium Badge */}
                 {contributor.isPremium === "true" && (
                   <div className="absolute top-4 right-4 z-30 animate-fade-in tooltip-container cursor-help">
                     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-br from-[#D4C5A8] via-[#FDFBF7] to-[#C3B08D] shadow-lg border border-white/40">

@@ -5,6 +5,7 @@ import LessonCard from "../Shared/LessonCard";
 import useAuth from "../../hooks/useAuth";
 import Loader from "../Shared/Loader";
 import useTheme from "../../hooks/useTheme";
+import usePremium from "../../hooks/usePremium";
 
 const MostSaved = () => {
   const { user } = useAuth();
@@ -12,7 +13,7 @@ const MostSaved = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const axiosInstance = useAxios();
-
+  const isPremium = usePremium();
   const { COLORS } = useTheme();
 
   useEffect(() => {
@@ -84,10 +85,7 @@ const MostSaved = () => {
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <LessonCard
-                  lesson={lesson}
-                  user={currentUser || { isPremium: false }}
-                />
+                <LessonCard lesson={lesson} isPremium={isPremium} />
               </motion.div>
             ))}
           </motion.div>

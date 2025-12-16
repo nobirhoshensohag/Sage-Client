@@ -5,7 +5,6 @@ import useTheme from "../../hooks/useTheme";
 
 const BenefitCard = ({ title, description, Icon }) => {
   const { COLORS } = useTheme();
-  
 
   return (
     <div className="group bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-transparent hover:border-[#D4C5A8] flex flex-col space-y-4 h-full">
@@ -30,7 +29,7 @@ const BenefitCard = ({ title, description, Icon }) => {
 
       <p className="text-gray-600 text-base flex-grow">{description}</p>
 
-      {/* Read More Link (Subtle interaction) */}
+      {/* Read More Link */}
       <Link
         to="/public-lessons"
         className="flex items-center text-sm font-medium pt-2 transition-all group-hover:translate-x-1"
@@ -44,8 +43,7 @@ const BenefitCard = ({ title, description, Icon }) => {
 };
 
 const LearningFromLifeSection = () => {
-   const { COLORS } = useTheme();
-
+  const { COLORS } = useTheme();
   const benefits = [
     {
       title: "Deepened Self-Awareness",
@@ -104,7 +102,7 @@ const LearningFromLifeSection = () => {
           </p>
         </div>
 
-        {/* --- CARDS: The Four Benefits Grid --- */}
+        {/* --- CARDS: Four Benefits Grid --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {benefits.map((benefit, index) => (
             <BenefitCard

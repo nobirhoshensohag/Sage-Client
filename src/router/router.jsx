@@ -16,6 +16,14 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import MyLessons from "../pages/ProtectedPages/Dashboard/MyLessons";
 import DashboardHome from "../pages/ProtectedPages/Dashboard/DashboardHome";
 import MyFavorites from "../pages/ProtectedPages/Dashboard/MyFavorites";
+import UserProfile from "../pages/ProtectedPages/Dashboard/UserProfile";
+import ApproveLessons from "../pages/ProtectedPages/Dashboard/Admin/ApproveLessons";
+import AdminHome from "../pages/ProtectedPages/Dashboard/Admin/AdminHome";
+import ReportedLessons from "../pages/ProtectedPages/Dashboard/Admin/ReportedLessons";
+import AdminProfile from "../pages/ProtectedPages/Dashboard/Admin/AdminProfile";
+import ManageUsers from "../pages/ProtectedPages/Dashboard/Admin/ManageUsers";
+import AdminRoute from "../routes/AdminRoute/AdminRoute";
+import Error404 from "../components/Shared/Error404";
 
 export const router = createBrowserRouter([
   {
@@ -30,15 +38,15 @@ export const router = createBrowserRouter([
         path: "public-lessons",
         element: <PublicLessons />,
       },
-       { path: "contact", element: <Contact /> },
-        
+      { path: "contact", element: <Contact /> },
+
       {
         path: "/lesson-details/:id",
         element: <LessonDetails />,
       },
       {
         path: "/payment-cancelled",
-          element: <PaymentCancelled />,
+        element: <PaymentCancelled />,
       },
       {
         path: "/payment-success",
@@ -48,7 +56,7 @@ export const router = createBrowserRouter([
         path: "/payment",
         element: (
           <PrivateRoute>
-             <UpgradePremium />
+            <UpgradePremium />
           </PrivateRoute>
         ),
       },
@@ -68,7 +76,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-   {
+  {
     path: "dashboard",
     element: (
       <PrivateRoute>
@@ -76,6 +84,10 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        path: "*",
+        element: <Error404 />,
+      },
       {
         index: true,
         element: <DashboardHome />,
@@ -92,6 +104,54 @@ export const router = createBrowserRouter([
         path: "my-favorites",
         element: <MyFavorites />,
       },
+      {
+        path: "profile",
+        element: <UserProfile />,
+      },
+      {
+        path: "approve-lessons",
+        element: (
+          <AdminRoute>
+            <ApproveLessons />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin-home",
+        element: (
+          <AdminRoute>
+            <AdminHome />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "reported-lessons",
+        element: (
+          <AdminRoute>
+            <ReportedLessons />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin-profile",
+        element: (
+          <AdminRoute>
+            <AdminProfile />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manage-users",
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
+      },
     ],
+  },
+  {
+    path: "*",
+    element: <Error404 />,
   },
 ]);

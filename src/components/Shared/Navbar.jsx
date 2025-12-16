@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import {
   Menu,
@@ -18,11 +17,12 @@ import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import usePremium from "../../hooks/usePremium";
+import useRole from "../../hooks/useRole";
 
 const UserDropdown = ({ user, handleLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const role = useRole();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,7 +42,7 @@ const UserDropdown = ({ user, handleLogout }) => {
       >
         <div className="relative cursor-pointer">
           <img
-              src={user?.photoURL}
+            src={user?.photoURL}
             alt={user?.displayName}
             className="w-9 h-9 rounded-full object-cover border-2 border-[#D4DEC9] group-hover:border-[#4F6F52] transition-colors"
           />
@@ -55,46 +55,40 @@ const UserDropdown = ({ user, handleLogout }) => {
           }`}
         />
       </button>
-src={user.photoURL}
+
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute right-0 mt-3 w-64 bg-white rounded-xl shadow-xl border border-[#D4DEC9]/50 py-2 transform transition-all duration-200 origin-top-right z-50">
           {/* Header with User Info */}
           <div className="px-4 py-3 border-b border-dashed border-[#D4DEC9]/50">
             <p className="text-sm font-bold text-[#2C3E2E] truncate">
-              {user.displayName}
+              {user?.displayName}
             </p>
-            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
           </div>
 
           {/* Menu Items */}
-          <div className="py-2">
+          <div className="py-2 z-50">
             <Link
-              to="/dashboard"
+              to={role === "admin" ? "/dashboard/admin-home" : "/dashboard"}
               className="flex items-center px-4 py-2 text-sm text-[#2C3E2E]/80 hover:bg-[#F3F5F0] hover:text-[#4F6F52] transition-colors"
             >
               <LayoutDashboard size={16} className="mr-3" />
               Dashboard
             </Link>
             <Link
-              to="/profile"
+              to="/dashboard/profile"
               className="flex items-center px-4 py-2 text-sm text-[#2C3E2E]/80 hover:bg-[#F3F5F0] hover:text-[#4F6F52] transition-colors"
             >
               <UserIcon size={16} className="mr-3" />
               Profile
             </Link>
-            <Link
-              to="/settings"
-              className="flex items-center px-4 py-2 text-sm text-[#2C3E2E]/80 hover:bg-[#F3F5F0] hover:text-[#4F6F52] transition-colors"
-            >
-              <Settings size={16} className="mr-3" />
-              Settings
-            </Link>
+           
           </div>
 
           {/* Footer with Logout */}
           <div className="border-t border-dashed border-[#D4DEC9]/50 pt-2 mt-1 px-2">
-             <button
+            <button
               onClick={handleLogout}
               className="flex w-full items-center px-2 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
             >
@@ -114,13 +108,13 @@ const Navbar = () => {
   const { user, logoutUser } = useAuth();
   const isPremium = usePremium();
 
-   const handleLogout = () => {
+  const handleLogout = () => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#7d9483",
+      confirmButtonColor: "#1a2f23",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, sign out!",
     }).then((result) => {
@@ -131,7 +125,7 @@ const Navbar = () => {
               title: "Signed Out!",
               text: "Your have been signed out.",
               icon: "success",
-              confirmButtonColor: "#7d9483",
+              confirmButtonColor: "#1a2f23",
             });
           })
           .catch((err) => {
@@ -140,14 +134,12 @@ const Navbar = () => {
       }
     });
   };
-
-   useEffect(() => {
-  const handleScroll = () => setIsScrolled(window.scrollY > 20);
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-   const links = (
+  const links = (
     <>
       {" "}
       <NavLink
@@ -176,7 +168,7 @@ const Navbar = () => {
       </NavLink>
       {user && (
         <NavLink
-           to="/dashboard/add-lessons"
+          to="/dashboard/add-lessons"
           className={({ isActive }) =>
             `text-sm font-medium text-[#2C3E2E]/80 hover:text-[#4F6F52] relative pb-1 transition-colors ${
               isActive
@@ -210,7 +202,7 @@ const Navbar = () => {
           : "bg-transparent py-5"
       }`}
     >
-       <div className="max-w-[1440px] mx-auto px-6 lg:px-0">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-0">
         <div className="flex items-center justify-between">
           <Logo />
 
@@ -222,7 +214,7 @@ const Navbar = () => {
             <div className="h-6 w-px bg-[#D4DEC9]"></div>
 
             {user ? (
-               <>
+              <>
                 {isPremium ? (
                   <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-br from-[#D4C5A8] via-[#FDFBF7] to-[#C3B08D] shadow-lg border border-white/40">
                     <Gem size={12} className="text-[#1A2F23]" />
@@ -247,7 +239,6 @@ const Navbar = () => {
               <>
                 <Link
                   to="/auth/login"
-                    
                   className="btn bg-[#f3f5f0]  hover:bg-[#4F6F52] hover:text-white text-[#2C3E2E] border border-[#2C3E2E] btn-sm px-5 rounded-full hover:shadow-lg transition-all flex items-center gap-2"
                 >
                   Sign In
@@ -265,7 +256,7 @@ const Navbar = () => {
 
           {/* Mobile Hamburger */}
           <div className="md:hidden flex items-center gap-4">
-            {/* Show mini avatar on mobile if logged in, optional */}
+            {/* Show mini avatar on mobile if logged in*/}
             {user && (
               <div className="w-8 h-8 rounded-full overflow-hidden border border-[#D4DEC9]">
                 <img
@@ -287,15 +278,15 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-        </div>
+      </div>
 
-        {/* Mobile Menu */}
+      {/* Mobile Menu */}
       <div
         className={`absolute top-full left-0 w-full bg-white border-b border-[#D4DEC9]/50 shadow-xl md:hidden overflow-hidden transition-all duration-300 ${
-          isMobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          isMobileMenuOpen ? "h-[550px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-       <div className="px-6 py-3 space-y-4">
+        <div className="px-6 py-3 space-y-4">
           {isPremium ? (
             <div className="flex items-center w-24 gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-br from-[#D4C5A8] via-[#FDFBF7] to-[#C3B08D] border border-white/40">
               <Gem size={12} className="text-[#1A2F23]" />
@@ -328,7 +319,7 @@ const Navbar = () => {
           >
             Public Lessons
           </NavLink>
-           {user && (
+          {user && (
             <NavLink
               to="/dashboard/add-lessons"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -344,21 +335,23 @@ const Navbar = () => {
           >
             Contact
           </NavLink>
-              <div className="pt-4 flex flex-col gap-3">
+
+          <div className="pt-4 flex flex-col gap-3">
             {user ? (
               // Mobile State for Logged In User
               <>
                 <div className="flex items-center gap-3 p-3 bg-[#F7F7F2] rounded-lg">
                   <img
-                    src={user.photoURL}
+                    src={user?.photoURL}
                     alt=""
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   <div>
                     <p className="font-bold text-[#2C3E2E] text-sm">
-                      {user.displayName}
+                      {user?.displayName}{" "}
                     </p>
-                    <p className="text-xs text-gray-500">{user.email}</p>
+
+                    <p className="text-xs text-gray-500">{user?.email}</p>
                   </div>
                 </div>
                 <Link
@@ -377,7 +370,7 @@ const Navbar = () => {
             ) : (
               // Mobile State for Guest
               <>
-              <UserDropdown user={user} handleLogout={handleLogout} />
+                <UserDropdown user={user} handleLogout={handleLogout} />
                 <Link
                   to="/auth/login"
                   className="btn btn-outline border-[#D4DEC9] text-[#2C3E2E] hover:bg-[#F3F5F0] hover:border-[#4F6F52] w-full rounded-full"
@@ -385,7 +378,7 @@ const Navbar = () => {
                   Sign In
                 </Link>
                 <Link
-                 to="/auth/register"
+                  to="/auth/register"
                   className="btn bg-[#4F6F52] hover:bg-[#3A523C] text-white border-none w-full rounded-full shadow-md flex items-center justify-center gap-2"
                 >
                   <PenTool className="w-4 h-4" /> Sign up

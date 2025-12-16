@@ -15,12 +15,12 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import axios from "axios";
-import useAxios from "../../hooks/useAxios"
+import useAxios from "../../hooks/useAxios";
 
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const { createUser, updateUser, setUser } = useAuth();
-   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const axiosInstance = useAxios();
   const navigate = useNavigate();
   const {
@@ -31,6 +31,7 @@ const Register = () => {
   const handleRegister = (data) => {
     setLoading(true);
     const profileImage = data.image[0];
+
     createUser(data.email, data.password)
       .then(() => {
         const formData = new FormData();
@@ -56,7 +57,7 @@ const Register = () => {
                   isPremium: false,
                 };
 
-                 axiosInstance
+                axiosInstance
                   .post("/users", { ...newUser, role: "user" })
                   .then((r) => {
                     if (r.data.insertedId) {
@@ -68,7 +69,7 @@ const Register = () => {
               })
               .catch((e) => {
                 console.log(e);
-                 })
+              })
               .finally(() => {
                 setLoading(false);
               });
@@ -78,7 +79,6 @@ const Register = () => {
         toast.error(err.message);
       });
   };
-
   return (
     <div className="w-full overflow-y-auto md:w-1/2 bg-[#F7F7F2] flex justify-center p-8 lg:p-16 text-[#2C3E30]">
       <div className="max-w-md w-full space-y-8">
@@ -118,7 +118,7 @@ const Register = () => {
               </div>
               <input
                 type="text"
-                 {...register("name", { required: true })}
+                {...register("name", { required: true })}
                 placeholder="Your Name"
                 className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8FA895]/50 focus:border-[#8FA895] transition-all text-sm placeholder-gray-400"
               />
@@ -133,11 +133,11 @@ const Register = () => {
             <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Profile Photo
             </label>
-             <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl cursor-pointer hover:border-[#8FA895] transition-all">
+            <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl cursor-pointer hover:border-[#8FA895] transition-all">
               <input
                 type="file"
                 accept="image/*"
-                 {...register("image", { required: true })}
+                {...register("image", { required: true })}
                 className="file-input file-input-ghost w-full"
               />
             </div>
@@ -165,7 +165,7 @@ const Register = () => {
                 className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8FA895]/50 focus:border-[#8FA895] transition-all text-sm placeholder-gray-400"
               />
             </div>
-             {errors.email?.type === "required" && (
+            {errors.email?.type === "required" && (
               <p className="text-red-500 text-xs">Email is required</p>
             )}
           </div>
@@ -192,6 +192,7 @@ const Register = () => {
                 placeholder="••••••••"
                 className="w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8FA895]/50 focus:border-[#8FA895] transition-all text-sm placeholder-gray-400"
               />
+
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
                 {showPass ? (
                   <Eye
@@ -226,10 +227,10 @@ const Register = () => {
           {/* Sign up Button */}
           <button
             type="submit"
-               disabled={loading}
+            disabled={loading}
             className="w-full cursor-pointer bg-[#8FA895] hover:bg-[#7D9483] text-white font-medium py-3.5 rounded-full transition-all duration-200 shadow-md hover:shadow-lg transform active:scale-[0.99]"
           >
-           {loading ? "Creating User..." : " Sign up"}
+            {loading ? "Creating User..." : " Sign up"}
           </button>
         </form>
         {/* Google Login */}

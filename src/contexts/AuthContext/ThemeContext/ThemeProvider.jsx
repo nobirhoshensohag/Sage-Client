@@ -8,6 +8,11 @@ const ThemeProvider = ({ children }) => {
     mist: "#F3F5F0",
     gold: "#D4C5A8",
     white: "#FFFFFF",
+    dark: "#1A2F23",
+    primary: "#4F6F52",
+    light: "#F3F5F0",
+    accent: "#D4C5A8",
+    error: "#9F5F5F",
   };
 
   const themeInfo = {

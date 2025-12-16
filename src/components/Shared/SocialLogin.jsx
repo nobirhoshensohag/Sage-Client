@@ -7,10 +7,8 @@ import { useNavigate } from "react-router";
 
 const SocialLogin = () => {
   const { googleLogin } = useAuth();
-
   const axiosInstance = useAxios();
   const navigate = useNavigate();
-
   const handleGoogleLogin = () => {
     googleLogin()
       .then((result) => {
