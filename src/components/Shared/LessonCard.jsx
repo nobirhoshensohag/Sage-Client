@@ -1,5 +1,13 @@
 import React from "react";
-import { Clock, ExternalLink, Lock, Sparkles, User, Crown } from "lucide-react";
+import {
+  Clock,
+  ExternalLink,
+  Lock,
+  Sparkles,
+  User,
+  Crown,
+  Gem,
+} from "lucide-react";
 import { Link } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import useTheme from "../../hooks/useTheme";
@@ -32,7 +40,7 @@ const LessonCard = ({ lesson }) => {
 
   return (
     <div
-      className={`relative w-full max-w-md mx-auto bg-white rounded-[2rem] overflow-hidden border transition-all duration-300 group ${
+       className={`relative w-full max-w-md mx-auto bg-white rounded-[2rem] overflow-hidden border transition-all duration-300 h-[500px] lg:h-[450px] group ${
         isLocked
           ? "border-gray-200"
           : `border-gray-100 hover:shadow-2xl hover:-translate-y-1`
@@ -121,6 +129,14 @@ const LessonCard = ({ lesson }) => {
           >
             {lesson.title}
           </h2>
+            {lesson.isPremiumAccess === "true" && (
+            <div className="flex items-center mb-3 w-24 gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-br from-[#D4C5A8] via-[#FDFBF7] to-[#C3B08D] border border-white/40">
+              <Gem size={12} className="text-[#1A2F23]" />
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#1A2F23]">
+                Premium
+              </span>
+            </div>
+          )}
 
           <p className="text-gray-600 leading-relaxed line-clamp-3">
             {lesson.description}
