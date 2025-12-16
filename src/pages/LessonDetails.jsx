@@ -65,7 +65,8 @@ const LessonDetails = () => {
           setLikes(res.data.likes);
           toast.success("Liked!");
         });
-       });
+  }
+ });
   };
 
   const handleLikeDelete = () => {
