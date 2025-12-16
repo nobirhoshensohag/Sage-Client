@@ -36,61 +36,81 @@ const LessonDetails = () => {
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
+  const [likeId, setLikeId] = useState("");
+  const [likes, setLikes] = useState(lesson?.likes);
+  const [favorites, setFavorites] = useState(lesson?.favorites);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [favorite, setFavorite] = useState(null);
+  const [favoriteId, setFavoriteId] = useState("")
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
+ useEffect(() => {}, []);
+  const handleLikeAdd = () => {
+    if (!user) return toast.error("You must be logged in");
+
+    const likedInfo = {
+      postId: lesson._id,
+      name: user.displayName,
+      email: user.email,
+      image: user.photoURL,
+      posterName: lesson.name,
+      posterEmail: lesson.email,
+      posterImage: lesson.authorImage,
+      postImage: lesson.image,
+    };
+    axiosInstance.post("/likes", likedInfo).then((res) => {
+      if (res.data.result.insertedId) {
+        setIsLiked(true);
+        axiosInstance.get(`/lessons/${lesson._id}`).then((res) => {
+          setLikes(res.data.likes);
+          toast.success("Liked!");
+        });
+       });
   };
-  const handleFavorite = async () => {
-    if (!lesson?._id || !user?.email) return;
 
-    const newFavoriteState = !isFavorite;
-    setIsFavorite(newFavoriteState);
+  const handleLikeDelete = () => {
+    axiosInstance.delete(`/likes/${likeId}`).then((res) => {
+      setIsLiked(false);
+      axiosInstance.get(`/lessons/${lesson._id}`).then((res) => {
+        setLikes(res.data.likes);
+        toast.success("Removed from likes");
+      });
+    });
+  };
 
-    const newFavoritesCount = newFavoriteState
-      ? (lesson.favorites || 0) + 1
-      : Math.max((lesson.favorites || 1) - 1, 0);
-    setLesson({ ...lesson, favorites: newFavoritesCount });
+  const handleFavoriteAdd = () => {
+    if (!user) return toast.error("You must be logged in");
 
-    if (newFavoriteState) {
-      // Add favorite
-      const favoriteLesson = {
-        postId: lesson._id,
-        postTitle: lesson.title,
-        email: user.email,
-        name: user.displayName,
-        image: user.photoURL,
-      };
+    const favoriteInfo = {
+      postId: lesson._id,
+      name: user.displayName,
+      email: user.email,
+      image: user.photoURL,
+      posterName: lesson.name,
+      posterEmail: lesson.email,
+      posterImage: lesson.authorImage,
+      postImage: lesson.image,
+    };
+    axiosInstance.post("/favorites", favoriteInfo).then((res) => {
+      if (res.data.result.insertedId) {
 
-      try {
-        const res = await axiosInstance.post("/favorites", favoriteLesson);
-        if (res.data.insertedId) {
-          setFavorite({ ...favoriteLesson, _id: res.data.insertedId });
-          toast.success("Added to Favorites!");
-        }
-      } catch (err) {
-        setIsFavorite(false);
-        setLesson({ ...lesson, favorites: Math.max(newFavoritesCount - 1, 0) });
-        toast.error("Failed to add favorite");
-      }
-      } else {
-      // Remove favorite
-      try {
-        const res = await axiosInstance.delete(`/favorites/${favorite._id}`);
-        if (res.data.deletedCount > 0) {
-          setFavorite(null);
-          toast.success("Removed from favorites!");
-        }
-      } catch (err) {
-        setIsFavorite(true);
-        setLesson({ ...lesson, favorites: newFavoritesCount + 1 });
-        toast.error("Failed to remove favorite");
+       setIsFavorite(true);
+        axiosInstance.get(`/lessons/${lesson._id}`).then((res) => {
+          setFavorites(res.data.favorites);
+          toast.success("Added to favorites!");
+        });
       }
     
-    }
+    });
+  };
+  const handleFavoriteDelete = () => {
+    axiosInstance.delete(`/favorites/${favoriteId}`).then((res) => {
+      setIsFavorite(false);
+      axiosInstance.get(`/lessons/${lesson._id}`).then((res) => {
+        setFavorites(res.data.favorites);
+        toast.success("Removed from favorites");
+      });
+    });
   };
 
   useEffect(() => {
@@ -100,38 +120,48 @@ const LessonDetails = () => {
         setLesson(res.data);
         setComments(res.data.comments || []);
         setLoading(false);
+         setLikes(res.data.likes);
+        setFavorites(res.data.favorites);
       })
       .catch(() => setLoading(false));
   }, [axiosInstance, id]);
   useEffect(() => {
-    if (!user?.email) return;
+     if (!user?.email || !lesson?.email) return;
 
     axiosInstance
-      .get(`/lessons?email=${user.email}`)
+      .get(`/lessons?email=${lesson.email}`)
       .then((res) => {
         setLessons(res.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [id, user?.email, axiosInstance]);
+   }, [id, lesson, axiosInstance, user]);
 
   useEffect(() => {
-    if (!lesson?._id) return;
+    
     if (!user?.email) return;
-    axiosInstance.get(`/favorites?email=${user.email}`).then((res) => {
-      const exists = res.data.find((fav) => fav.postId === lesson._id);
-
-      setIsFavorite(!!exists);
-      setFavorite(exists || null);
+     axiosInstance.get(`/likes?email=${user.email}`).then((res) => {
+      const exists = res.data.find((item) => item.postId === id);
+      if (exists) {
+        setIsLiked(true);
+        setLikeId(exists._id);
+      } else {
+        setIsLiked(false);
+      }
     });
-  }, [lesson, axiosInstance, user]);
+  }, [axiosInstance, id, user]);
    useEffect(() => {
-    if (!lesson?._id) return;
-
-    axiosInstance.get(`/favorites?postId=${lesson._id}`).then((res) => {
-      setLesson({ ...lesson, favorites: res.data.length });
+     if (!user?.email) return;
+    axiosInstance.get(`/favorites?email=${user.email}`).then((res) => {
+      const exists = res.data.find((item) => item.postId === id);
+      if (exists) {
+        setIsFavorite(true);
+        setFavoriteId(exists._id);
+      } else {
+        setIsFavorite(false);
+      }
     });
-  }, [lesson, axiosInstance]);
+  }, [axiosInstance, id, user]);
 
   if (loading)
     return (
@@ -245,7 +275,7 @@ const LessonDetails = () => {
 
                 {isLiked ? (
                   <button
-                    onClick={handleLike}
+                     onClick={handleLikeDelete}
                     className="cursor-pointer flex items-center gap-2 bg-white/10 hover:bg-[#4F6F52]/20 transition-colors rounded-full px-3 py-1 shadow-inner"
                   >
                     <BsFillHandThumbsUpFill
@@ -253,43 +283,43 @@ const LessonDetails = () => {
                       className="text-[#4F6F52]"
                     />
                     <span className="text-sm text-[#4F6F52] font-semibold">
-                      2
+                      {likes}
                     </span>
                   </button>
                 ) : (
                   <button
-                    onClick={handleLike}
+                     onClick={handleLikeAdd}
                     className="cursor-pointer flex items-center gap-2 bg-white/10 hover:bg-[#4F6F52]/20 transition-colors rounded-full px-3 py-1 shadow-inner"
                   >
                     <BsHandThumbsUp size={20} className="text-[#4F6F52]" />
                     <span className="text-sm text-[#4F6F52] font-semibold">
-                      2
+                       {likes}
                     </span>
                   </button>
                 )}
 
                 {/* Favorites */}
+                    {isFavorite ? (
                   <button
-                  onClick={handleFavorite}
-                  className="flex cursor-pointer items-center gap-2 bg-white/10 hover:bg-red-500/30 transition-colors rounded-full px-3 py-1 shadow-inner"
-                >
-                  {isFavorite && favorite ? (
-                    <>
-                      <FaHeart size={20} className="text-red-500" />
-                      <span className="text-sm text-red-500 font-semibold">
-                        {lesson?.favorites || 0}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      <FaRegHeart size={20} className="text-red-500" />
-                      <span className="text-sm text-red-500 font-semibold">
-                        {lesson?.favorites || 0}
-                      </span>
-                    </>
-                  )}
-                </button>
+                    onClick={handleFavoriteDelete}
+                    className="flex cursor-pointer items-center gap-2 bg-white/10 hover:bg-red-500/30 transition-colors rounded-full px-3 py-1 shadow-inner"
+                  >
+                    <FaHeart size={20} className="text-red-500" />
+                    <span className="text-sm text-red-500 font-semibold">
+                      {favorites}
+                    </span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleFavoriteAdd}
+                    className="flex cursor-pointer items-center gap-2 bg-white/10 hover:bg-red-500/30 transition-colors rounded-full px-3 py-1 shadow-inner"
+                  >
+                    <FaRegHeart size={20} className="text-red-500" />
+                    <span className="text-sm text-red-500 font-semibold">
+                      {favorites}
+                    </span>
+                  </button>
+                )}
 
                 {/* Share */}
                 <div className="flex flex-col items-center">
@@ -420,7 +450,7 @@ const LessonDetails = () => {
                 No comments yet. Be the first to share your thoughts!
               </p>
             ) : (
-               comments.map((c, index) => (
+               comments.slice(0, 5).map((c, index) => (
                 <div
                   key={index}
                   className="bg-white/10 p-4 rounded-xl flex gap-3 items-start"
