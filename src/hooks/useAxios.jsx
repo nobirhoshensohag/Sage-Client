@@ -1,7 +1,6 @@
 import axios from "axios";
-import React from "react";
 const instance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "sage-server-rouge.vercel.app",
 });
 const useAxios = () => {
   return instance;
