@@ -198,6 +198,18 @@ const Navbar = () => {
       >
         Contact
       </NavLink>
+      <NavLink
+        to="/about"
+        className={({ isActive }) =>
+          `text-sm font-medium text-[#2C3E2E]/80 hover:text-[#4F6F52] relative pb-1 transition-colors ${
+            isActive
+              ? "after:w-full after:bg-[#4F6F52] text-[#4F6F52]"
+              : "after:w-0 after:bg-transparent"
+          } after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:transition-all after:duration-300`
+        }
+      >
+        About Us
+      </NavLink>
     </>
   );
   return (
@@ -218,6 +230,7 @@ const Navbar = () => {
           {/* Desktop Auth Section */}
           <div className="hidden md:flex items-center gap-4">
             <div className="h-6 w-px bg-[#D4DEC9]"></div>
+
 
             {user ? (
               <>
@@ -340,6 +353,13 @@ const Navbar = () => {
             className="block text-lg font-medium py-2 border-b border-dashed border-[#D4DEC9]/50 text-[#2C3E2E]"
           >
             Contact
+          </NavLink>
+          <NavLink
+            to="/about"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block text-lg font-medium py-2 border-b border-dashed border-[#D4DEC9]/50 text-[#2C3E2E]"
+          >
+            About Us
           </NavLink>
 
           <div className="pt-4 flex flex-col gap-3">

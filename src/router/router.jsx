@@ -24,6 +24,14 @@ import AdminProfile from "../pages/ProtectedPages/Dashboard/Admin/AdminProfile";
 import ManageUsers from "../pages/ProtectedPages/Dashboard/Admin/ManageUsers";
 import AdminRoute from "../routes/AdminRoute/AdminRoute";
 import Error404 from "../components/Shared/Error404";
+import CaseStudies from "../pages/CaseStudies";
+import DeveloperDocs from "../pages/DeveloperDocs";
+import CommunityForum from "../pages/CommunityForum";
+import KnowledgeBase from "../pages/KnowledgeBase";
+import About from "../pages/About";
+import Careers from "../pages/Careers";
+import Press from "../pages/Press";
+import Blog from "../pages/Blog";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +60,58 @@ export const router = createBrowserRouter([
         path: "/payment-success",
         element: <PaymentSuccess />,
       },
+      {
+        path: "/case-studies",
+       element: <CaseStudies />
+      },
+      {
+        path: "/developer-docs",
+        element: <DeveloperDocs/>
+      },
+      {
+      path: "/community-forum",
+       element: <CommunityForum />
+      },
+      {
+        path: "/knowledge-base",
+         element: <KnowledgeBase />
+      },
+      {
+  path: "about",
+  element:   (
+    <PrivateRoute>  
+      <About />
+      </PrivateRoute>
+  ),
+  
+},
+{
+  path: "careers",
+  element: (
+    <PrivateRoute>
+      <Careers />
+    </PrivateRoute>
+  ),
+},
+{
+  path: "press",
+  element: (
+    <PrivateRoute>
+      <Press />
+    </PrivateRoute>
+  ),
+},
+{
+  path: "blog",
+  element: (
+    <PrivateRoute>
+      <Blog />
+    </PrivateRoute>
+  ),
+},
+      
+
+
       {
         path: "/payment",
         element: (
@@ -148,6 +208,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
+      
     ],
   },
   {

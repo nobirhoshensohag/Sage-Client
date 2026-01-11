@@ -26,7 +26,7 @@ const PublicLessons = () => {
   const axiosInstance = useAxios();
   const [loading, setLoading] = useState(true);
   const isPremium = usePremium();
-  const limit = 6;
+  const limit = 8;
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -209,7 +209,8 @@ const PublicLessons = () => {
           </div>
         ) : lessons.length > 0 ? (
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pb-20"
+
             initial="hidden"
             animate="visible"
             variants={{

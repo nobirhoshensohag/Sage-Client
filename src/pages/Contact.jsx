@@ -85,7 +85,7 @@ const Contact = () => {
                 <p className="text-xs text-[#D4C5A8] uppercase tracking-wider font-medium">
                   Email Us
                 </p>
-                <p className="text-lg">hello@sage.app</p>
+                <p className="text-lg">nobirhoshensohag708@gmail.com</p>
               </div>
             </div>
 
@@ -97,7 +97,7 @@ const Contact = () => {
                 <p className="text-xs text-[#D4C5A8] uppercase tracking-wider font-medium">
                   Visit HQ
                 </p>
-                <p className="text-lg">Mohammadpur, Dhaka</p>
+                <p className="text-lg">Bagachara, Jessore</p>
               </div>
             </div>
           </div>

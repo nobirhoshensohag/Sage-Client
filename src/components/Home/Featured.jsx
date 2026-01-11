@@ -15,21 +15,30 @@ const Featured = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const axiosInstance = useAxios();
+
+  // Get current user
   useEffect(() => {
     if (!user?.email) return;
     axiosInstance.get(`/users?email=${user.email}`).then((res) => {
       setCurrentUser(res.data[0]);
     });
   }, [axiosInstance, user]);
+
+  // Fetch featured lessons
   useEffect(() => {
     setLoading(true);
-    axiosInstance.get("/lessons?isFeatured=true").then((res) => {
-      setLoading(false);
-      setLessons(res.data.result);
-    });
+    axiosInstance
+      .get("/lessons?isFeatured=true") // ✅ limit 8
+      .then((res) => {
+        setLessons(res.data.result);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [axiosInstance]);
+
   return (
     <div>
+      {/* Heading */}
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
         <span
           className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
@@ -37,7 +46,6 @@ const Featured = () => {
         >
           Best Lessons
         </span>
-
         <h2
           className="text-4xl sm:text-5xl font-bold leading-tight"
           style={{ color: COLORS.darkGreen }}
@@ -47,13 +55,13 @@ const Featured = () => {
             Lessons.
           </span>
         </h2>
-
         <p className="text-lg text-gray-500 max-w-xl mx-auto">
           A curated treasury of exceptional wisdom
         </p>
       </div>
+
+      {/* LESSON GRID */}
       <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-0">
-        {/* LESSON GRID */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader />
@@ -63,26 +71,18 @@ const Featured = () => {
           </div>
         ) : lessons.length > 0 ? (
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pb-20"
             initial="hidden"
             animate="visible"
             variants={{
               hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1,
-                },
-              },
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
             }}
           >
             {lessons.map((lesson) => (
               <motion.div
                 key={lesson._id}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
               >
                 <LessonCard lesson={lesson} isPremium={isPremium} />
               </motion.div>

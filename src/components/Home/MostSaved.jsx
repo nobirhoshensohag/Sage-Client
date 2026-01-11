@@ -64,7 +64,8 @@ const MostSaved = () => {
           </div>
         ) : lessons.length > 0 ? (
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pb-20"
+
             initial="hidden"
             animate="visible"
             variants={{
@@ -77,7 +78,7 @@ const MostSaved = () => {
               },
             }}
           >
-            {lessons.slice(0, 6).map((lesson) => (
+            {lessons.slice(0, 8).map((lesson) => (
               <motion.div
                 key={lesson._id}
                 variants={{

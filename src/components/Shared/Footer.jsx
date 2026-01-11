@@ -11,6 +11,7 @@ import {
 import Logo from "./Logo";
 import useTheme from "../../hooks/useTheme";
 
+
 const FooterLink = ({ href, children }) => (
   <a
     href={href}
@@ -51,9 +52,9 @@ const Footer = () => {
               for the modern contemplative.
             </p>
             <div className="flex items-center space-x-3 pt-2">
-              <SocialIcon Icon={Linkedin} href="#" />
-              <SocialIcon Icon={Twitter} href="#" />
-              <SocialIcon Icon={Instagram} href="#" />
+              <SocialIcon Icon={Linkedin} href="https://www.linkedin.com/in/nobir-hoshen-sohag/" />
+              <SocialIcon Icon={Twitter} href="https://x.com/nobirhoshen007" />
+              <SocialIcon Icon={Instagram} href="https://www.instagram.com/nobir.hoshen.sohag" />
             </div>
           </div>
 
@@ -66,10 +67,10 @@ const Footer = () => {
               Resources
             </h4>
             <div className="flex flex-col space-y-3">
-              <FooterLink href="#">Knowledge Base</FooterLink>
-              <FooterLink href="#">Community Forum</FooterLink>
-              <FooterLink href="#">Developer Docs</FooterLink>
-              <FooterLink href="#">Case Studies</FooterLink>
+              <FooterLink href="/case-studies">Case Studies</FooterLink>
+<FooterLink href="/developer-docs">Developer Docs</FooterLink>
+<FooterLink href="/community-forum">Community Forum</FooterLink>
+<FooterLink href="/knowledge-base">Knowledge Base</FooterLink>
             </div>
           </div>
 
@@ -81,30 +82,20 @@ const Footer = () => {
             >
               Company
             </h4>
-            <div className="flex flex-col space-y-3">
-              <FooterLink href="#">About Us</FooterLink>
-              <FooterLink href="#">Careers</FooterLink>
-              <FooterLink href="#">Press</FooterLink>
-              <FooterLink href="#">Blog</FooterLink>
-            </div>
-          </div>
+          <div className="flex flex-col space-y-3">
+        <FooterLink href="/about">About Us</FooterLink>
+<FooterLink href="/careers">Careers</FooterLink>
+<FooterLink href="/press">Press</FooterLink>
+<FooterLink href="/blog">Blog</FooterLink>
+</div>
+</div>
+</div>
+           
+         
+        
 
-          {/* 4. Legal */}
-          <div className="space-y-4">
-            <h4
-              className="text-sm font-semibold uppercase tracking-wider"
-              style={{ color: COLORS.gold }}
-            >
-              Legal
-            </h4>
-            <div className="flex flex-col space-y-3">
-              <FooterLink href="#">Terms of Service</FooterLink>
-              <FooterLink href="#">Privacy Policy</FooterLink>
-              <FooterLink href="#">Cookie Settings</FooterLink>
-            </div>
-          </div>
-        </div>
 
+          
         {/* --- Copyright Bar --- */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs tracking-wide">
           <p className="order-2 md:order-1 mt-4 md:mt-0">
@@ -115,9 +106,10 @@ const Footer = () => {
             <span className="uppercase">Worldwide</span>
           </div>
         </div>
-      </div>
+        </div>
+      
     </footer>
   );
-};
+}
 
 export default Footer;
