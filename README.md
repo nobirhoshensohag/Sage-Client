@@ -2,7 +2,7 @@
 **Sage** is a full-stack platform where users can create, organize, and share meaningful life lessons, personal growth insights, and wisdom. The platform allows users to save lessons, explore public wisdom, and upgrade to premium for exclusive content.
 
 ## 🔗 Live Links  
-- 🌍 **Live Site:** https://digital-life-lessons-40759.web.app 
+- 🌍 **Live Site:** https://sage-client-nskc.vercel.app
 - ⚙️ **API:** https://sage-server-rouge.vercel.app  
 - 💻 **Client Repo:** https://github.com/nobirhoshensohag/Sage-Client.git  
 - 🧠 **Server Repo:** https://github.com/nobirhoshensohag/Sage-Server.git
