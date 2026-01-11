@@ -69,7 +69,7 @@ const Blog = () => {
         className="mt-16 text-center max-w-2xl mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
+        transition={{ duration: 0.7,  delay: 0.6 }}
       >
         <h3 className="text-3xl font-semibold mb-4" style={{ color: COLORS.gold }}>
           Stay Updated
